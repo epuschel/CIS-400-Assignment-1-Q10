@@ -23,11 +23,6 @@ void BNF(string&);
 int main()
 {
 	Welcome();
-	/*string user_input;
-	char delim = '=';
-	cout << "Please enter input for the calculator language (0 1 2 3 4 5 6 7 8 9 + - * /  = )" << endl;
-	std::getline(cin, user_input, delim);
-	cout << user_input << endl;*/
 	system("pause");
 	return 0;
 }
@@ -46,13 +41,13 @@ void Welcome()
 	{
 		cout << "Please enter input for the calculator language (0 1 2 3 4 5 6 7 8 9 + - * /  = )" << endl;
 		std::getline(cin, first_input);
-		//cin >> user_input;
-		XChecker(first_input);
-		//user_input.push_back('=');
-		//cout << user_input << endl;
+		XChecker(first_input);;
 		AddtoUS(first_input, user_input, endInput);
 		if (endInput == true)
-
+		{
+			BNF(user_input);
+			endInput = false;
+		}
 	}
 }
 
@@ -66,7 +61,10 @@ void XChecker(string user_input)
 {
 	for (int i = 0; i < user_input.size(); i++)
 		if (user_input.at(i) == 'x' || user_input.at(i) == 'X')
+		{
+			cout << "Goodbye." << endl;
 			exit(0);
+		}
 }
 
 // AUTHOR: Ethan Puschell
@@ -88,12 +86,13 @@ void AddtoUS(string first_input, string& user_input, bool& endInput)
 		}
 		if (CheckCharacter(first_input.at(i)) == false)
 		{
+			cerr << "Error : Character " << first_input.at(i) << " is invalid input." << endl;
 			first_input.erase(i, 1);
 			--i;
 		}
 	}
 	user_input.append(first_input);
-	cout << user_input << endl;
+	cout << "User input: " << user_input << endl;
 }
 
 // AUTHOR: Ethan Puschell
@@ -155,7 +154,15 @@ bool CheckCharacter(char x)
 	return isChar;
 }
 
-void BNF(string user_input)
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-27-21
+// LAST MODIFIED: 9-27-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: 
+void BNF(string& user_input)
 {
-
+	cout << "BNF time baby!" << endl;
+	user_input.clear();
+	cout << "New user input: " << user_input << endl;
 }
