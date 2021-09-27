@@ -2,7 +2,7 @@
 *Author: Ethan Puschell
 *Creation Date: 9-27-21
 * Modification Date: 9-27-21
-* Purpose:
+* Purpose: EBNF calculator that parses user input (as a string) to calculate using leftmost derivation.
 */
 
 #include<iostream>
@@ -10,9 +10,8 @@
 #include<math.h>
 #include<stdlib.h>
 #include<string>
-//#include "Header.h"
 using namespace std;
-int i = atoi("321");
+//int i = atoi("321");
 
 void Welcome();
 void XChecker(string);
@@ -163,6 +162,15 @@ bool CheckCharacter(char x)
 void BNF(string& user_input)
 {
 	cout << "BNF time baby!" << endl;
-	user_input.clear();
-	cout << "New user input: " << user_input << endl;
+	for (int i = 0; i < user_input.size(); i++)
+	{
+		if (user_input.at(i) == '+' || user_input.at(i) == '-')
+		{
+			int value1 = atoi(user_input.c_str());
+			cout << "value 1: " <<  value1 << endl;
+			cout << "updated user input: " << user_input << endl;
+		}
+	}
+	/*user_input.clear();
+	cout << "New user input: " << user_input << endl;*/
 }
