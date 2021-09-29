@@ -11,12 +11,14 @@
 #include<stdlib.h>
 #include<string>
 #include<vector>
+#include "Header.h"
 using namespace std;
 //int i = atoi("321");
 
 void Welcome();
 void XChecker(string);
 void DupOpCheck(string&);
+bool BeginningOp(char);
 void DupOpFinder(string, string);
 void AddtoUS(string, string&, bool&);
 bool CheckCharacter(char);
@@ -79,11 +81,17 @@ void XChecker(string user_input)
 // DESCRIPTION: 
 void DupOpCheck(string& user_input)
 {
+	/*if (BeginningOp(user_input.begin() == true))
+	{
+		cerr << "ERROR : Operator found at the beginning of input. Deleting input." << endl;
+		user_input.erase();
+	}*/
 	vector<string> dubOps = { 
 		"++", "+-", "+*", "+/",
 		"-+", "--", "-*", "-/",
 		"*+", "*-", "**", "*/",
-		"/+", "/-", "/*", "//" };
+		"/+", "/-", "/*", "//",
+		"+=", "-=", "*=", "/="};
 	for (int i = 0; i < dubOps.size(); i++)
 	{
 		size_t found = user_input.find(dubOps.at(i));
@@ -93,6 +101,32 @@ void DupOpCheck(string& user_input)
 			user_input.erase();
 		}
 	}
+}
+
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-28-21
+// LAST MODIFIED: 9-28-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: 
+bool BeginningOp(char x)
+{
+	bool bOp = false;
+	switch (x) {
+	case '+':
+		bOp = true;
+		break;
+	case '-':
+		bOp = true;
+		break;
+	case '*':
+		bOp = true;
+		break;
+	case '/':
+		bOp = true;
+		break;
+	}
+	return bOp;
 }
 
 // AUTHOR: Ethan Puschell
@@ -191,6 +225,15 @@ bool CheckCharacter(char x)
 void BNF(string& user_input)
 {
 	cout << "BNF time baby!" << endl;
+	if (user_input.find("+") == 0
+		|| user_input.find("-") == 0
+		|| user_input.find("*") == 0
+		|| user_input.find("/") == 0)
+	{
+		cerr << "Error : Cannot have an operator at the beginning of the input. Deleting operand." << endl;
+		user_input.erase(0, 1);
+		cout << "New user input: " << user_input << endl;
+	}
 	for (int i = 0; i < user_input.size(); i++)
 	{
 		if (user_input.at(i) == '+' || user_input.at(i) == '-')
@@ -202,4 +245,9 @@ void BNF(string& user_input)
 	}
 	/*user_input.clear();
 	cout << "New user input: " << user_input << endl;*/
+}
+
+void ParseUI(string& user_input, vector<string> user_vec)
+{
+
 }
