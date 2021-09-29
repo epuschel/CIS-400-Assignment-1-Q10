@@ -10,11 +10,14 @@
 #include<math.h>
 #include<stdlib.h>
 #include<string>
+#include<vector>
 using namespace std;
 //int i = atoi("321");
 
 void Welcome();
 void XChecker(string);
+void DupOpCheck(string&);
+void DupOpFinder(string, string);
 void AddtoUS(string, string&, bool&);
 bool CheckCharacter(char);
 void BNF(string&);
@@ -40,8 +43,10 @@ void Welcome()
 	{
 		cout << "Please enter input for the calculator language (0 1 2 3 4 5 6 7 8 9 + - * /  = )" << endl;
 		std::getline(cin, first_input);
-		XChecker(first_input);;
+		XChecker(first_input);
+		DupOpCheck(first_input);
 		AddtoUS(first_input, user_input, endInput);
+		DupOpCheck(user_input);
 		if (endInput == true)
 		{
 			BNF(user_input);
@@ -64,6 +69,30 @@ void XChecker(string user_input)
 			cout << "Goodbye." << endl;
 			exit(0);
 		}
+}
+
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-28-21
+// LAST MODIFIED: 9-28-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: 
+void DupOpCheck(string& user_input)
+{
+	vector<string> dubOps = { 
+		"++", "+-", "+*", "+/",
+		"-+", "--", "-*", "-/",
+		"*+", "*-", "**", "*/",
+		"/+", "/-", "/*", "//" };
+	for (int i = 0; i < dubOps.size(); i++)
+	{
+		size_t found = user_input.find(dubOps.at(i));
+		if (found != std::string::npos)
+		{
+			cerr << "ERROR : Illegal operator function " << dubOps.at(i) << " found. Deleting input." << endl;
+			user_input.erase();
+		}
+	}
 }
 
 // AUTHOR: Ethan Puschell
@@ -167,7 +196,7 @@ void BNF(string& user_input)
 		if (user_input.at(i) == '+' || user_input.at(i) == '-')
 		{
 			int value1 = atoi(user_input.c_str());
-			cout << "value 1: " <<  value1 << endl;
+			cout << "value 1: " << value1 << endl;
 			cout << "updated user input: " << user_input << endl;
 		}
 	}
