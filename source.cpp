@@ -23,6 +23,7 @@ void DupOpFinder(string, string);
 void AddtoUS(string, string&, bool&);
 bool CheckCharacter(char);
 void BNF(string&);
+void ParseUI(string&, vector<string>);
 
 int main()
 {
@@ -224,6 +225,7 @@ bool CheckCharacter(char x)
 // DESCRIPTION: 
 void BNF(string& user_input)
 {
+	vector<string> u_vec;
 	cout << "BNF time baby!" << endl;
 	if (user_input.find("+") == 0
 		|| user_input.find("-") == 0
@@ -234,7 +236,8 @@ void BNF(string& user_input)
 		user_input.erase(0, 1);
 		cout << "New user input: " << user_input << endl;
 	}
-	for (int i = 0; i < user_input.size(); i++)
+	ParseUI(user_input, u_vec);
+	/*for (int i = 0; i < user_input.size(); i++)
 	{
 		if (user_input.at(i) == '+' || user_input.at(i) == '-')
 		{
@@ -242,12 +245,38 @@ void BNF(string& user_input)
 			cout << "value 1: " << value1 << endl;
 			cout << "updated user input: " << user_input << endl;
 		}
-	}
-	/*user_input.clear();
-	cout << "New user input: " << user_input << endl;*/
+	}*/
+	user_input.clear();
+	cout << "New user input: " << user_input << endl;
 }
 
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-28-21
+// LAST MODIFIED: 9-29-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: 
 void ParseUI(string& user_input, vector<string> user_vec)
 {
-
+	int uiSize = user_input.size();
+	for (int i = 0; i < uiSize; i++)
+	{
+		if (user_input.at(i) == '+' || user_input.at(i) == '-' || user_input.at(i) == '*' || user_input.at(i) == '/')
+		{
+			user_input.insert(i + 1, " ");
+			user_input.insert(i, " ");
+			i++;
+			uiSize += 2;
+		}
+	}
+	user_input.insert(uiSize - 1, " ");
+	cout << "User input with spacing: " << user_input << endl;
+	string buf;
+	stringstream ss(user_input);
+	while (ss >> buf)
+		user_vec.push_back(buf);
+	cout << "User vector: ";
+	for (int j = 0; j < user_vec.size(); j++)
+		cout << user_vec.at(j) << " ";
+	cout << endl;
 }
