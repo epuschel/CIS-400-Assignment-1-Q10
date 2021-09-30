@@ -22,6 +22,7 @@ bool BeginningOp(char);
 void DupOpFinder(string, string);
 void AddtoUS(string, string&, bool&);
 bool CheckCharacter(char);
+bool ParenthesesCheck(string&);
 void BNF(string&);
 void ParseUI(string&, vector<string>);
 
@@ -87,12 +88,7 @@ void DupOpCheck(string& user_input)
 		cerr << "ERROR : Operator found at the beginning of input. Deleting input." << endl;
 		user_input.erase();
 	}*/
-	vector<string> dubOps = { 
-		"++", "+-", "+*", "+/",
-		"-+", "--", "-*", "-/",
-		"*+", "*-", "**", "*/",
-		"/+", "/-", "/*", "//",
-		"+=", "-=", "*=", "/="};
+	vector<string> dubOps = { "+*", "+/", "-*", "-/", "**", "*/", "/*", "//","+=", "-=", "*=", "/="};
 	for (int i = 0; i < dubOps.size(); i++)
 	{
 		size_t found = user_input.find(dubOps.at(i));
@@ -132,7 +128,7 @@ bool BeginningOp(char x)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-27-21
-// LAST MODIFIED: 9-27-21
+// LAST MODIFIED: 9-29-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -156,11 +152,18 @@ void AddtoUS(string first_input, string& user_input, bool& endInput)
 	}
 	user_input.append(first_input);
 	cout << "User input: " << user_input << endl;
+	if (ParenthesesCheck(user_input) == false)
+	{
+		cerr << "Error : Parentheses not properly opened/closed. Erasing invalid input." << endl;
+		user_input.erase();
+		cout << "New user input (post parentheses erasing): " << user_input << endl;
+		endInput = false;
+	}
 }
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-27-21
-// LAST MODIFIED: 9-27-21
+// LAST MODIFIED: 9-29-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -213,8 +216,36 @@ bool CheckCharacter(char x)
 	case '=':
 		isChar = true;
 		break;
+	case '(':
+		isChar = true;
+		break;
+	case ')':
+		isChar = true;
+		break;
 	}
 	return isChar;
+}
+
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-29-21
+// LAST MODIFIED: 9-29-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: 
+bool ParenthesesCheck(string& user_input)
+{
+	int oPrnths = 0, cPrnths = 0;
+	for (int i = 0; i < user_input.size(); i++)
+	{
+		if (user_input.at(i) == '(')
+			oPrnths++;
+		else if (user_input.at(i) == ')')
+			cPrnths++;
+	}
+	if (oPrnths == cPrnths)
+		return true;
+	else
+		return false;
 }
 
 // AUTHOR: Ethan Puschell
@@ -227,6 +258,7 @@ void BNF(string& user_input)
 {
 	vector<string> u_vec;
 	cout << "BNF time baby!" << endl;
+	if (ParenthesesCheck(user_input) == false)
 	if (user_input.find("+") == 0
 		|| user_input.find("-") == 0
 		|| user_input.find("*") == 0
@@ -236,6 +268,7 @@ void BNF(string& user_input)
 		user_input.erase(0, 1);
 		cout << "New user input: " << user_input << endl;
 	}
+	cout << "User input without equals sign before parsing: " << user_input << endl;
 	ParseUI(user_input, u_vec);
 	/*for (int i = 0; i < user_input.size(); i++)
 	{
@@ -258,7 +291,9 @@ void BNF(string& user_input)
 // DESCRIPTION: 
 void ParseUI(string& user_input, vector<string> user_vec)
 {
-	int uiSize = user_input.size();
+	int uiSize = user_input.size() - 1;
+	//user_input.erase(uiSize, 1);
+	//cout << "User input without the equals sign: " << user_input << endl;
 	for (int i = 0; i < uiSize; i++)
 	{
 		if (user_input.at(i) == '+' || user_input.at(i) == '-' || user_input.at(i) == '*' || user_input.at(i) == '/')
@@ -279,4 +314,9 @@ void ParseUI(string& user_input, vector<string> user_vec)
 	for (int j = 0; j < user_vec.size(); j++)
 		cout << user_vec.at(j) << " ";
 	cout << endl;
+	ParseTree* r = BuildTree(user_vec);
+	cout << "User expression is in Parse Tree." << endl;
+	PrintTree(r, 0);
+	InOrder(r);
 }
+
