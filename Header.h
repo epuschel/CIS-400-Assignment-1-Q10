@@ -94,8 +94,6 @@ ParseTree* NewNode(string c)
 // DESCRIPTION: Returns root of contructed tree for given postfix expression.
 ParseTree* BuildTree(vector<string> user_vec)
 {
-	//string initializer = NULL;
-	//ParseTree* pt = NewNode(user_vec.at(0));
 	ParseTree* pt = new ParseTree;
 	for (int i = 0; i < user_vec.size(); i++)
 	{
@@ -105,6 +103,7 @@ ParseTree* BuildTree(vector<string> user_vec)
 			pt->left = temp;
 			temp->parent = pt;
 			pt = pt->left;
+			cout << "Added " << pt->value << " as a left node of the tree." << endl;
 		}
 		else if (!IsOperator(user_vec.at(i)) && !pt->right)
 		{
@@ -112,199 +111,38 @@ ParseTree* BuildTree(vector<string> user_vec)
 			pt->right = temp;
 			temp->parent = pt;
 			pt = pt->right;
+			cout << "Added " << pt->value << " as a right node of the tree." << endl;
 		}
 		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() == 0)
 		{
 			ParseTree* temp = NewNode(user_vec.at(i));
+			//ParseTree* oldParent = pt->parent;
 			pt->parent = temp;
-			if (pt == pt->parent->left)
-				temp->left = pt;
-			else if (pt == pt->parent->right)
-				temp->right = pt;
+			//if (pt->value == oldParent->ri)
+			temp->left = pt;
+			//else if (pt->parent->right->value.length() == 0)
+				//temp->right = pt;
 			pt = pt->parent;
+			cout << "Added " << pt->value << " as a parent to the tree." << endl;
 		}
 		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() != 0)
 		{
-			ParseTree* temp = NewNode(user_vec.at(i));
-			if (pt == pt->parent->left)
-				temp->left = pt;
-			else if (pt == pt->parent->right)
-				temp->right = pt;
-			pt->parent = temp;
+			ParseTree* opTemp = NewNode(user_vec.at(i));
+			ParseTree* oldParent = pt->parent;
+			if (pt->value == oldParent->left->value)
+			{
+				opTemp->left = pt;
+				oldParent->left = opTemp;
+				cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the left child of " << oldParent->value << endl;
+			}
+			else if (pt->value == oldParent->right->value)
+			{
+				opTemp->left = pt;
+				oldParent->right = opTemp;
+				cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the right child of " << oldParent->value << endl;
+			}
+			pt->parent = opTemp;
 		}
 	}
-	/*stack<ParseTree*> ptStack;
-	ParseTree *t, *t1/*, *t2;
-	int operand;
-	//char index;
-
-	/* Traverse through every character of input expression */
-	/*for (int i = 0; i < user_vec.size(); i++)
-	{
-		//index = user_vec.at(i).c_str;
-		/* If operand, simply push into stack */
-		/*if (!IsOperator(user_vec.at(i)))
-		{
-			t = NewNode(user_vec.at(i));
-			ptStack.push(t);
-		}
-		else //operator
-		{
-			t = NewNode(user_vec.at(i));
-
-			/* Pop 2 nodes */
-			/*t1 = ptStack.top();	//Store top
-			ptStack.pop();		//Remove top
-			t2 = ptStack.top();
-			ptStack.pop();
-
-			/* Make them children */
-			/*t->right = t1;
-			t->left = t2;
-
-			/* Add this subexpression to the stack */
-			/*ptStack.push(t);
-		}
-	}
-
-	/* Only element will be root of the Parse Tree*/
-	/*t = ptStack.top();
-	ptStack.pop();
-	return t;*/
 	return pt;
 }
-
-void PrintTree(ParseTree* pt, int space)
-{
-	int addSpace = 8;
-	if (!pt)
-		return;
-	space += addSpace;
-	PrintTree(pt->right, space);
-	cout << endl;
-	for (int i = addSpace; i < space; i++)
-		cout << " ";
-	cout << pt->value << endl;
-	PrintTree(pt->left, space);
-}
-
-/*struct Node {
-	string key;
-	Node * left;
-	Node * right;
-	Node * parent;
-	Node(string k) :
-		key(k), left(NULL), right(NULL), parent(NULL) { }
-	Node(string k, Node* l, Node* r, Node* p) :
-		key(k), left(l), right(r), parent(p) { }
-};
-
-class ParseTree {
-public:
-	Node* root;
-private:
-	void deleteAll();
-	Node * successor(Node* w) const;
-	int n;
-public:
-	ParseTree() : root(NULL) { };
-	~ParseTree();
-};
-
-void ParseTree::deleteAll()
-{
-	Node * w = root;
-	while (w)
-	{
-		if (!(w->left || w->right))
-		{
-			Node * x = w;
-			w = w->parent;
-			if (w)
-			{
-				if (w->left == x)
-					w->left = NULL;
-				else
-					w->right = NULL;
-			}
-			delete x;
-			continue;
-		}
-		w = (w->left) ? w->left : w->right;
-	}
-}
-
-ParseTree::~ParseTree()
-{
-	deleteAll();
-}*/
-
-/*class BinaryTree {
-private:
-	string key;
-	BinaryTree* left;
-	BinaryTree* right;
-public:
-	BinaryTree(string rootObj)
-	{
-		this->key = rootObj;
-		this->left = NULL;
-		this->right = NULL;
-	}
-
-	void insertLeft(string newNode)
-	{
-		if (this->left == NULL)
-			this->left = new BinaryTree(newNode);
-		else
-		{
-			BinaryTree* t = new BinaryTree(newNode);
-			t->left = this->left;
-			this->left = t;
-		}
-	}
-
-	void insertRight(string newNode)
-	{
-		if (this->right == NULL)
-			this->right = new BinaryTree(newNode);
-		else
-		{
-			BinaryTree* t = new BinaryTree(newNode);
-			t->right = this->right;
-			this->right = t;
-		}
-	}
-
-	BinaryTree* getRight()
-	{
-		return this->right;
-	}
-
-	BinaryTree* getLeft()
-	{
-		return this->left;
-	}
-
-	void createRoot(string obj)
-	{
-		this->key = obj;
-	}
-
-	string getRoot()
-	{
-		return this->key;
-	}
-};
-
-/*BinaryTree *buildParseTree(string fpexp) {
-	string buf;
-	stringstream ss(fpexp);
-	vector<string> fplist;
-	while (ss >> buf)
-		fplist.push_back(buf);
-	BinaryTree * pT = new BinaryTree("");
-	BinaryTree * currentTree = pT;
-
-	string arr[] = { "+", "-", "*", "/" };
-}*/
