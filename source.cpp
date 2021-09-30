@@ -13,7 +13,6 @@
 #include<vector>
 #include "Header.h"
 using namespace std;
-//int i = atoi("321");
 
 void Welcome();
 void XChecker(string);
@@ -128,7 +127,7 @@ bool BeginningOp(char x)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-27-21
-// LAST MODIFIED: 9-29-21
+// LAST MODIFIED: 9-30-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -250,7 +249,7 @@ bool ParenthesesCheck(string& user_input)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-27-21
-// LAST MODIFIED: 9-27-21
+// LAST MODIFIED: 9-30-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -270,28 +269,19 @@ void BNF(string& user_input)
 	}
 	cout << "User input without equals sign before parsing: " << user_input << endl;
 	ParseUI(user_input, u_vec);
-	/*for (int i = 0; i < user_input.size(); i++)
-	{
-		if (user_input.at(i) == '+' || user_input.at(i) == '-')
-		{
-			int value1 = atoi(user_input.c_str());
-			cout << "value 1: " << value1 << endl;
-			cout << "updated user input: " << user_input << endl;
-		}
-	}*/
 	user_input.clear();
 	cout << "New user input: " << user_input << endl;
 }
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-28-21
-// LAST MODIFIED: 9-29-21
+// LAST MODIFIED: 9-30-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
 void ParseUI(string& user_input, vector<string> user_vec)
 {
-	int uiSize = user_input.size() - 1;
+	int uiSize = user_input.size();
 	//user_input.erase(uiSize, 1);
 	//cout << "User input without the equals sign: " << user_input << endl;
 	for (int i = 0; i < uiSize; i++)
@@ -306,6 +296,8 @@ void ParseUI(string& user_input, vector<string> user_vec)
 	}
 	user_input.insert(uiSize - 1, " ");
 	cout << "User input with spacing: " << user_input << endl;
+	cout << "Now getting rid of the equals sign." << endl;
+	user_input.erase(uiSize, 1);
 	string buf;
 	stringstream ss(user_input);
 	while (ss >> buf)
@@ -316,7 +308,7 @@ void ParseUI(string& user_input, vector<string> user_vec)
 	cout << endl;
 	ParseTree* r = BuildTree(user_vec);
 	cout << "User expression is in Parse Tree." << endl;
-	PrintTree(r, 0);
+	//PrintTree(r, 0);
 	InOrder(r);
 }
 
