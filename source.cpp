@@ -275,7 +275,7 @@ void BNF(string& user_input)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-28-21
-// LAST MODIFIED: 9-30-21
+// LAST MODIFIED: 10-1-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -306,9 +306,8 @@ void ParseUI(string& user_input, vector<string> user_vec)
 	for (int j = 0; j < user_vec.size(); j++)
 		cout << user_vec.at(j) << " ";
 	cout << endl;
-	ParseTree* r = BuildTree(user_vec);
+	ParseTree* pt = BuildTree(user_vec);
 	cout << "User expression is in Parse Tree." << endl;
-	//PrintTree(r, 0);
-	InOrder(r);
+	cout << "Solution = " << EvaluateTree(pt) << endl;
 }
 
