@@ -227,21 +227,21 @@ bool CheckCharacter(char x)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-29-21
-// LAST MODIFIED: 9-29-21
+// LAST MODIFIED: 9-30-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
 bool ParenthesesCheck(string& user_input)
 {
-	int oPrnths = 0, cPrnths = 0;
+	int count = 0;
 	for (int i = 0; i < user_input.size(); i++)
 	{
 		if (user_input.at(i) == '(')
-			oPrnths++;
+			count++;
 		else if (user_input.at(i) == ')')
-			cPrnths++;
+			count--;
 	}
-	if (oPrnths == cPrnths)
+	if (count == 0)
 		return true;
 	else
 		return false;
