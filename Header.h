@@ -19,13 +19,13 @@ using namespace std;
 struct ParseTree
 {
 	string value;
-	ParseTree* left, *right, *parent, *root;
+	ParseTree* left, *right, *parent;
 	ParseTree() :
-		value(""), left(NULL), right(NULL), parent(NULL), root(NULL) { }
+		value(""), left(NULL), right(NULL), parent(NULL) { }
 	ParseTree(string v) :
-		value(v), left(NULL), right(NULL), parent(NULL), root(NULL) { }
+		value(v), left(NULL), right(NULL), parent(NULL) { }
 	ParseTree(string v, ParseTree* l, ParseTree* r, ParseTree* p, ParseTree* t) :
-		value(v), left(l), right(r), parent(p), root(t) { }
+		value(v), left(l), right(r), parent(p) { }
 };
 
 // AUTHOR: Ethan Puschell
@@ -47,22 +47,6 @@ bool IsOperator(string c)
 // LAST MODIFIED: 9-29-21
 // INPUT: 
 // OUTPUT: 
-// DESCRIPTION: Utility function to do inorder traversal (right derivative).
-void InOrder(ParseTree* pt)
-{
-	if (pt)
-	{
-		InOrder(pt->left);
-		cout << pt->value;
-		InOrder(pt->right);
-	}
-}
-
-// AUTHOR: Ethan Puschell
-// CREATION DATE: 9-29-21
-// LAST MODIFIED: 9-29-21
-// INPUT: 
-// OUTPUT: 
 // DESCRIPTION: A utility function to create a new node.
 ParseTree* NewNode(string c)
 {
@@ -74,13 +58,13 @@ ParseTree* NewNode(string c)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-29-21
-// LAST MODIFIED: 9-30-21
+// LAST MODIFIED: 10-1-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: Returns root of contructed tree for given postfix expression.
 ParseTree* BuildTree(vector<string> user_vec)
 {
-	ParseTree* pt = new ParseTree;
+	ParseTree* pt = new ParseTree, *root = NULL;
 	for (int i = 0; i < user_vec.size(); i++)
 	{
 		if (!IsOperator(user_vec.at(i)) && !pt->left)
@@ -105,7 +89,7 @@ ParseTree* BuildTree(vector<string> user_vec)
 			pt->parent = temp;
 			temp->left = pt;
 			pt = pt->parent;
-			pt->root = pt;
+			root = pt;
 			cout << "Added " << pt->value << " as a parent to the tree." << endl;
 		}
 		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() != 0)
@@ -119,12 +103,32 @@ ParseTree* BuildTree(vector<string> user_vec)
 			pt = pt->parent;
 		}
 	}
-	return pt->root;
+	return root;
+}
+
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 10-1-21
+// LAST MODIFIED: 10-1-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION:
+void RestructureTree(ParseTree* pt)
+{
+	ParseTree* current = pt, *root = pt;
+	while (!current->right)
+	{
+		current = current->right;
+		if (current->value == "+" && !current->right->right || current->value == "-" && !current->right->right)
+		{
+			ParseTree* temp = current;
+
+		}
+	}
 }
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-30-21
-// LAST MODIFIED: 9-30-21
+// LAST MODIFIED: 10-1-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: Returns root of contructed tree for given postfix expression.
@@ -132,12 +136,8 @@ int EvaluateTree(ParseTree* root)
 {
 	if (!root)
 		return 0;
-	if (!root->left && root->right)
-	{
-		//FIXME: Find out how to convert a vector string into an integer.
-		string num = root->value;
-		return atoi(num.c_str);
-	}
+	if (!root->left && !root->right)
+		return stoi(root->value);
 
 	int valL = EvaluateTree(root->left);
 	int valR = EvaluateTree(root->right);
