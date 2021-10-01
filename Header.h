@@ -15,32 +15,18 @@
 #include<algorithm>
 #include<stack>
 using namespace std;
-//int i = atoi("321");
 
 struct ParseTree
 {
 	string value;
-	ParseTree* left, *right, *parent;
+	ParseTree* left, *right, *parent, *root;
 	ParseTree() :
-		value(""), left(NULL), right(NULL), parent(NULL) { }
+		value(""), left(NULL), right(NULL), parent(NULL), root(NULL) { }
 	ParseTree(string v) :
-		value(v), left(NULL), right(NULL), parent(NULL) { }
-	ParseTree(string v, ParseTree* l, ParseTree* r, ParseTree* p) :
-		value(v), left(l), right(r), parent(p) { }
+		value(v), left(NULL), right(NULL), parent(NULL), root(NULL) { }
+	ParseTree(string v, ParseTree* l, ParseTree* r, ParseTree* p, ParseTree* t) :
+		value(v), left(l), right(r), parent(p), root(t) { }
 };
-
-/*struct Node {
-	string value;
-	Node* left;
-	Node* right;
-	Node* parent;
-	Node(string) :
-		value(""), left(NULL), right(NULL), parent(NULL) { }
-	Node(string v, Node* l, Node* r, Node* p) :
-		value(v), left(l), right(r), parent(p) { }
-};
-
-class*/
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-29-21
@@ -116,33 +102,52 @@ ParseTree* BuildTree(vector<string> user_vec)
 		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() == 0)
 		{
 			ParseTree* temp = NewNode(user_vec.at(i));
-			//ParseTree* oldParent = pt->parent;
 			pt->parent = temp;
-			//if (pt->value == oldParent->ri)
 			temp->left = pt;
-			//else if (pt->parent->right->value.length() == 0)
-				//temp->right = pt;
 			pt = pt->parent;
+			pt->root = pt;
 			cout << "Added " << pt->value << " as a parent to the tree." << endl;
 		}
 		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() != 0)
 		{
 			ParseTree* opTemp = NewNode(user_vec.at(i));
 			ParseTree* oldParent = pt->parent;
-			if (pt->value == oldParent->left->value)
-			{
-				opTemp->left = pt;
-				oldParent->left = opTemp;
-				cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the left child of " << oldParent->value << endl;
-			}
-			else if (pt->value == oldParent->right->value)
-			{
-				opTemp->left = pt;
-				oldParent->right = opTemp;
-				cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the right child of " << oldParent->value << endl;
-			}
+			opTemp->left = pt;
+			oldParent->right = opTemp;
+			cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the right child of " << oldParent->value << endl;
 			pt->parent = opTemp;
+			pt = pt->parent;
 		}
 	}
-	return pt;
+	return pt->root;
+}
+
+// AUTHOR: Ethan Puschell
+// CREATION DATE: 9-30-21
+// LAST MODIFIED: 9-30-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION: Returns root of contructed tree for given postfix expression.
+int EvaluateTree(ParseTree* root)
+{
+	if (!root)
+		return 0;
+	if (!root->left && root->right)
+	{
+		//FIXME: Find out how to convert a vector string into an integer.
+		string num = root->value;
+		return atoi(num.c_str);
+	}
+
+	int valL = EvaluateTree(root->left);
+	int valR = EvaluateTree(root->right);
+
+	if (root->value == "+")
+		return valL + valR;
+	else if (root->value == "-")
+		return valL - valR;
+	else if (root->value == "*")
+		return valL * valR;
+	else if (root->value == "/")
+		return valL / valR;
 }
