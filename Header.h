@@ -57,6 +57,43 @@ ParseTree* NewNode(string c)
 }
 
 // AUTHOR: Ethan Puschell
+// CREATION DATE: 10-1-21
+// LAST MODIFIED: 10-1-21
+// INPUT: 
+// OUTPUT: 
+// DESCRIPTION:
+ParseTree* RestructureTree(ParseTree* pt)
+{
+	ParseTree* current = pt, *root = pt;
+	while (current->right)
+	{
+		if (current->value == "+" && current->right->right || current->value == "-" && current->right->right)
+		{
+			if (current != root)
+			{
+				ParseTree* currP = current->parent, *currRght = current->right;
+				currP->right = currRght;
+				currRght->parent = currP;
+			}
+			ParseTree* temp = current->right->left, *tempParent = current->right;
+			current->right = temp;
+			temp->parent = current;
+			tempParent->left = current;
+			current->parent = tempParent;
+			if (current == root)
+			{
+				root = tempParent;
+			}
+			//pt = current;
+			current = current->parent;
+		}
+		else
+			current = current->right;
+	}
+	return root;
+}
+
+// AUTHOR: Ethan Puschell
 // CREATION DATE: 9-29-21
 // LAST MODIFIED: 10-1-21
 // INPUT: 
@@ -83,7 +120,7 @@ ParseTree* BuildTree(vector<string> user_vec)
 			pt = pt->right;
 			cout << "Added " << pt->value << " as a right node of the tree." << endl;
 		}
-		else if (IsOperator(user_vec.at(i)) && pt->parent->value.length() == 0)
+		else if (IsOperator(user_vec.at(i)) && !pt->parent->value.length() == 0)
 		{
 			ParseTree* temp = NewNode(user_vec.at(i));
 			pt->parent = temp;
@@ -97,33 +134,15 @@ ParseTree* BuildTree(vector<string> user_vec)
 			ParseTree* opTemp = NewNode(user_vec.at(i));
 			ParseTree* oldParent = pt->parent;
 			opTemp->left = pt;
+			opTemp->parent = oldParent;
 			oldParent->right = opTemp;
 			cout << "Setting " << pt->value << " as the left child of " << opTemp->value << " and " << opTemp->value << " as the right child of " << oldParent->value << endl;
 			pt->parent = opTemp;
 			pt = pt->parent;
 		}
 	}
-	return root;
-}
 
-// AUTHOR: Ethan Puschell
-// CREATION DATE: 10-1-21
-// LAST MODIFIED: 10-1-21
-// INPUT: 
-// OUTPUT: 
-// DESCRIPTION:
-void RestructureTree(ParseTree* pt)
-{
-	ParseTree* current = pt, *root = pt;
-	while (!current->right)
-	{
-		current = current->right;
-		if (current->value == "+" && !current->right->right || current->value == "-" && !current->right->right)
-		{
-			ParseTree* temp = current;
-
-		}
-	}
+	return RestructureTree(root);
 }
 
 // AUTHOR: Ethan Puschell
