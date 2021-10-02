@@ -127,7 +127,7 @@ bool BeginningOp(char x)
 
 // AUTHOR: Ethan Puschell
 // CREATION DATE: 9-27-21
-// LAST MODIFIED: 9-30-21
+// LAST MODIFIED: 10-1-21
 // INPUT: 
 // OUTPUT: 
 // DESCRIPTION: 
@@ -215,12 +215,12 @@ bool CheckCharacter(char x)
 	case '=':
 		isChar = true;
 		break;
-	case '(':
+	/*case '(':
 		isChar = true;
 		break;
 	case ')':
 		isChar = true;
-		break;
+		break;*/
 	}
 	return isChar;
 }
@@ -310,4 +310,3 @@ void ParseUI(string& user_input, vector<string> user_vec)
 	cout << "User expression is in Parse Tree." << endl;
 	cout << "Solution = " << EvaluateTree(pt) << endl;
 }
-
